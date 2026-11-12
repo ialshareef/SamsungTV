@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Samsung TV Pro</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/themes.css">
+</head>
+<body data-theme="dark-pro">
+  <header class="topbar">
+    <div class="brand">Samsung TV <span>Pro</span></div>
+    <div class="status">
+      <span id="theme-name"></span>
+      <time id="clock">--:--</time>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>المفضّلة</h2>
+      <div class="grid" id="pinned"></div>
+    </section>
+    <section>
+      <h2>كل التطبيقات</h2>
+      <div class="grid" id="apps"></div>
+    </section>
+  </main>
+
+  <footer class="hints">
+    <span><i class="key red"></i>تغيير السمة</span>
+    <span><i class="key green"></i>إضافة/إزالة من المفضّلة</span>
+    <span><i class="key yellow"></i>وضع الأداء</span>
+    <span><i class="key blue"></i>تحديث القائمة</span>
+  </footer>
+
+  <div id="toast" role="status"></div>
+
+  <script src="js/apps.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

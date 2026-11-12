@@ -1,0 +1,38 @@
+/* كل سمة = مجموعة متغيّرات فقط. لإضافة سمة: انسخ كتلة وغيّر القيم، ثم أضف اسمها في THEMES داخل js/main.js */
+
+/* داكن احترافي — للمكاتب وغرف الاجتماعات */
+[data-theme="dark-pro"] {
+  --bg: #0f1115; --fg: #e8eaed; --muted: #8a919c; --line: #22262e;
+  --tile: #181b22; --tile-focus: #20242d;
+  --accent: #3d8bfd; --accent-fg: #ffffff; --radius: 14px;
+}
+
+/* مكتبي فاتح — للقاعات المضاءة */
+[data-theme="office-light"] {
+  --bg: #f4f5f7; --fg: #1d2129; --muted: #5f6673; --line: #dde0e6;
+  --tile: #ffffff; --tile-focus: #eaf1ff;
+  --accent: #1a5fd0; --accent-fg: #ffffff; --radius: 14px;
+}
+
+/* تباين عالٍ — للرؤية من مسافة بعيدة وإمكانية الوصول */
+[data-theme="high-contrast"] {
+  --bg: #000000; --fg: #ffffff; --muted: #ffd600; --line: #ffffff;
+  --tile: #000000; --tile-focus: #1a1a1a;
+  --accent: #ffd600; --accent-fg: #000000; --radius: 0px;
+}
+[data-theme="high-contrast"] .tile { border-color: #ffffff; }
+[data-theme="high-contrast"] .tile.focused { border-color: var(--accent); border-width: 6px; }
+
+/* لافتات رقمية / استقبال — هادئ وبعلامة لونية */
+[data-theme="signage"] {
+  --bg: #0b1f1a; --fg: #eafff7; --muted: #7fb5a5; --line: #163a31;
+  --tile: #10302a; --tile-focus: #164238;
+  --accent: #19c39a; --accent-fg: #00140f; --radius: 22px;
+}
+
+/* استوديو / مونتاج — رمادي محايد لا يؤثر على إدراك الألوان */
+[data-theme="studio-neutral"] {
+  --bg: #2b2b2b; --fg: #dcdcdc; --muted: #9a9a9a; --line: #3a3a3a;
+  --tile: #333333; --tile-focus: #3d3d3d;
+  --accent: #bdbdbd; --accent-fg: #1a1a1a; --radius: 6px;
+}
