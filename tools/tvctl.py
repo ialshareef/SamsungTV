@@ -249,7 +249,11 @@ class Cloud:
         c = {"component": "main", "capability": capability, "command": command}
         if args is not None:
             c["arguments"] = args
-        return st_request("POST", "/devices/%s/commands" % self.dev, {"commands": [c]})
+        res = st_request("POST", "/devices/%s/commands" % self.dev, {"commands": [c]})
+        failed = [r for r in res.get("results", []) if r.get("status") not in ("ACCEPTED", "COMPLETED")]
+        if failed:
+            die("رفضت الشاشة الأمر %s.%s: %s" % (capability, command, json.dumps(failed, ensure_ascii=False)))
+        return res
 
     def key(self, name):
         st_key = KEYS.get(name.lower(), (None, None))[1]
