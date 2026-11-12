@@ -225,6 +225,7 @@
   applyTheme();
   tick(); setInterval(tick, 15000);
   refresh();
+  if (window.Widgets && window.STV_CONFIG) Widgets.start(window.STV_CONFIG);
   // عند العودة للتطبيق، حدّث القائمة لالتقاط أي تطبيق مثبّت حديثاً
   document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
 })();

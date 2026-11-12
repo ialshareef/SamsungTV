@@ -16,6 +16,22 @@
     </div>
   </header>
 
+  <section class="widgets">
+    <div class="card prayer">
+      <div class="card-head"><span>مواقيت الصلاة · <span id="w-prayer-city"></span></span><b id="w-prayer-next"></b></div>
+      <ul id="w-prayer-list"></ul>
+    </div>
+    <div class="card weather">
+      <div class="card-head"><span>الطقس</span></div>
+      <div class="big"><b id="w-weather-temp">--°</b><span id="w-weather-desc"></span></div>
+      <div class="sub" id="w-weather-range"></div>
+    </div>
+    <div class="card ramadan">
+      <div class="card-head"><span id="w-hijri"></span></div>
+      <div class="big"><b id="w-ramadan-num">--</b><span id="w-ramadan-label"></span></div>
+    </div>
+  </section>
+
   <main>
     <section>
       <h2>المفضّلة</h2>
@@ -27,6 +43,8 @@
     </section>
   </main>
 
+  <div class="news"><b id="w-news-src"></b><span id="w-news-title">جارٍ تحميل الأخبار…</span></div>
+
   <footer class="hints">
     <div class="action" data-action="theme"><i class="key red"></i>تغيير السمة</div>
     <div class="action" data-action="pin"><i class="key green"></i>المفضّلة (ضغط مطوّل على OK)</div>
@@ -36,7 +54,9 @@
 
   <div id="toast" role="status"></div>
 
+  <script src="js/config.js"></script>
   <script src="js/apps.js"></script>
+  <script src="js/widgets.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
