@@ -1,3 +1,5 @@
 build/
 *.wgt
 .DS_Store
+.tv/
+__pycache__/
