@@ -32,7 +32,7 @@
 
 1. **على الكمبيوتر:** ثبّت Python 3 و Git، ثم انسخ المشروع:
    ```bash
-   git clone https://github.com/ialshareef/state.git samsung-tv
+   git clone https://github.com/ialshareef/SamsungTV.git samsung-tv
    ```
 2. **اعرف IP الشاشة:** الإعدادات ← عام ← الشبكة ← حالة الشبكة ← إعدادات IP.
 3. **اسمح بالتحكم من الشبكة:** الإعدادات ← عام ← مدير الأجهزة الخارجية ← فعّل "Device Connection Manager"، واجعل "Access Notification" مفعّلاً.
