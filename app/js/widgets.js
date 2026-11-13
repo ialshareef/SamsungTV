@@ -218,12 +218,14 @@
             var doc = new DOMParser().parseFromString(xml, 'text/xml');
             var items = doc.querySelectorAll('item > title, entry > title');
             for (var i = 0; i < items.length && i < 8; i++) {
-              var t = items[i].textContent.trim();
-              if (t) all.push({ src: feed.name, title: t });
+              var t = items[i].textContent.trim().replace(/\s+-\s+[^-]+$/, '');
+              if (t) all.push({ src: feed.name, title: t, i: i });
             }
           } catch (e) {}
         }
-        if (--pending === 0 && all.length) { news = all; store.set('news', all); newsIdx = 0; showNews(); }
+        if (--pending === 0 && all.length) {
+          all.sort(function (a, b) { return a.i - b.i; }); // تناوب بين المصادر
+          news = all; store.set('news', all); newsIdx = 0; showNews(); }
         if (pending === 0 && !all.length && !news.length) text('w-news-title', 'الأخبار غير متاحة حالياً');
       });
     });
@@ -236,6 +238,58 @@
     text('w-news-title', n.title);
   }
 
+  // ───────────── المباريات القادمة (TheSportsDB) ─────────────
+  var TEAM_AR = {
+    'Al-Hilal': 'الهلال', 'Al-Nassr': 'النصر', 'Barcelona': 'برشلونة', 'Real Madrid': 'ريال مدريد',
+    'Al-Ittihad': 'الاتحاد', 'Al-Ahli': 'الأهلي', 'Al-Shabab': 'الشباب', 'Al-Ettifaq': 'الاتفاق',
+    'Al-Taawoun': 'التعاون', 'Al-Fateh': 'الفتح', 'Al-Fayha': 'الفيحاء', 'Al-Qadsiah': 'القادسية',
+    'Al-Raed': 'الرائد', 'Al-Khaleej': 'الخليج', 'Al-Riyadh': 'الرياض', 'Al-Okhdood': 'الأخدود',
+    'Al-Kholood': 'الخلود', 'Al-Hazem': 'الحزم', 'Al-Najma': 'النجمة', 'Damac': 'ضمك', 'NEOM': 'نيوم',
+    'Al-Diriyah': 'الدرعية', 'Al-Feiha': 'الفيحاء', 'Atletico Madrid': 'أتلتيكو مدريد', 'Sevilla': 'إشبيلية',
+    'Valencia': 'فالنسيا', 'Villarreal': 'فياريال', 'Real Sociedad': 'ريال سوسيداد', 'Athletic Bilbao': 'أتلتيك بلباو',
+    'Real Betis': 'ريال بيتيس', 'Girona': 'جيرونا', 'Celta Vigo': 'سيلتا فيغو', 'Osasuna': 'أوساسونا',
+    'Getafe': 'خيتافي', 'Mallorca': 'مايوركا', 'Espanyol': 'إسبانيول', 'Rayo Vallecano': 'رايو فاليكانو',
+    'Alaves': 'ألافيس', 'Deportivo Alavés': 'ألافيس', 'Elche': 'إلتشي', 'Levante': 'ليفانتي', 'Real Oviedo': 'ريال أوفييدو', 'Neftchi Fergana': 'نفتشي فرغانة'
+  };
+  var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  function ar(name) { return TEAM_AR[name] || name; }
+
+  function loadMatches() {
+    var cached = store.get('matches');
+    if (cached) showMatches(cached);
+    var pending = cfg.teams.length, found = {};
+    cfg.teams.forEach(function (team) {
+      get('https://www.thesportsdb.com/api/v1/json/123/eventsnext.php?id=' + team.id, 'json', function (err, d) {
+        var e = !err && d && d.events && d.events[0];
+        if (e) found[e.idEvent] = { home: e.strHomeTeam, away: e.strAwayTeam, ts: e.strTimestamp, league: e.strLeague };
+        if (--pending === 0) {
+          var list = Object.keys(found).map(function (k) { return found[k]; })
+            .sort(function (a, b) { return a.ts < b.ts ? -1 : 1; });
+          if (list.length) { store.set('matches', list); showMatches(list); }
+          else if (!cached) text('w-matches-empty', 'لا توجد بيانات مباريات حالياً');
+        }
+      });
+    });
+  }
+
+  function showMatches(list) {
+    var ul = $('w-matches-list');
+    ul.textContent = '';
+    var now = new Date();
+    list.slice(0, 4).forEach(function (m) {
+      var at = new Date(m.ts + (/Z|[+-]\d\d:?\d\d$/.test(m.ts) ? '' : 'Z')); // التوقيت من المصدر بـ UTC
+      if (at < new Date(now - 3 * 3600 * 1000)) return;
+      var li = document.createElement('li');
+      li.innerHTML = '<span class="teams"></span><span class="when"></span>';
+      li.firstChild.textContent = ar(m.home) + ' × ' + ar(m.away);
+      var days = daysBetween(now, at);
+      var day = days === 0 ? 'اليوم' : days === 1 ? 'غداً' : DAYS[at.getDay()] + ' ' + at.getDate() + '/' + (at.getMonth() + 1);
+      li.lastChild.textContent = day + ' ' + ('0' + at.getHours()).slice(-2) + ':' + ('0' + at.getMinutes()).slice(-2);
+      ul.appendChild(li);
+    });
+    text('w-matches-empty', ul.children.length ? '' : 'لا توجد مباريات قريبة');
+  }
+
   function applyWallpaper() {
     if (!cfg.wallpaper) return;
     document.body.classList.add('has-wallpaper');
@@ -246,11 +300,12 @@
     cfg = config;
     applyWallpaper();
     renderPrayers(); renderHijri();
-    loadWeather(); loadNews();
+    loadWeather(); loadNews(); if (cfg.teams && cfg.teams.length) loadMatches();
     setInterval(renderPrayers, 30 * 1000);
     setInterval(renderHijri, 10 * 60 * 1000);
     setInterval(loadWeather, 30 * 60 * 1000);
     setInterval(loadNews, 15 * 60 * 1000);
+    setInterval(function () { if (cfg.teams && cfg.teams.length) loadMatches(); }, 3 * 3600 * 1000);
     setInterval(function () { newsIdx++; showNews(); }, 8000);
   }
 

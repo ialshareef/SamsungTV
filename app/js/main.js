@@ -74,7 +74,7 @@
     if (!state.pinned.length) {
       var e = document.createElement('div');
       e.className = 'empty';
-      e.textContent = 'اضغط الزر الأخضر على أي تطبيق لإضافته هنا';
+      e.textContent = 'اضغط مطوّلاً على OK فوق أي تطبيق لإضافته هنا';
       pinnedEl.appendChild(e);
     }
     state.pinned.forEach(function (id) { pinnedEl.appendChild(tile(byId[id], true)); });
