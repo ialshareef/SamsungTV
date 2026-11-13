@@ -262,7 +262,9 @@ class Cloud:
         if name.lower() == "power":
             return self.power("off")
         if not st_key:
-            die("المفتاح '%s' غير مدعوم سحابياً. المدعوم: up down left right ok back home menu volup voldown mute power" % name)
+            # SmartThings يقبل أيضاً الأرقام وكثيراً من المفاتيح الأخرى بأسمائها (RED, SOURCE, CHUP, GUIDE...)
+            st_key = {"blue": "BLUE", "red": "RED", "green": "GREEN", "yellow": "YELLOW", "source": "SOURCE",
+                      "exit": "EXIT", "play": "PLAY", "pause": "PAUSE", "stop": "STOP"}.get(name.lower(), name.upper().replace("KEY_", ""))
         self.cmd("samsungvd.remoteControl", "send", [st_key, "PRESS_AND_RELEASED"])
 
     def apps(self):
