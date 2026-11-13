@@ -13,8 +13,13 @@ Pick the path based on where this session runs:
 | On the user's computer (Desktop app / `claude remote-control`) | local (auto) | Token is saved in `.tv/config.json` after `setup --ip`. |
 
 Config lives in `.tv/config.json` (gitignored — it holds the pairing token; never commit or print it).
-In a fresh cloud session it will be missing: run `cloud-devices`, pick the TV (`ocfDeviceType` = `oic.d.tv`),
-then `setup --st-device <id>`.
+In a fresh cloud session it will be missing. The user's TV is SmartThings device
+`cf3399d0-5cb6-8cb9-9473-6a2c17d050c6` ("65\" Crystal UHD"), so run:
+`python3 tools/tvctl.py setup --st-device cf3399d0-5cb6-8cb9-9473-6a2c17d050c6 --prefer cloud`.
+Inputs: `dtv` (TV), `HDMI1` (PlayStation 5), `HDMI3` (PC).
+
+Known quirk: after a cloud command, `status` keeps reporting the old volume for a while even though the TV
+changed (confirmed by the user). Trust the command's COMPLETED result, not an immediate `status` read.
 
 ```bash
 python3 tools/tvctl.py status
